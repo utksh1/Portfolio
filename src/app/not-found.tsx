@@ -3,8 +3,8 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <Flex style={{ minHeight: "100vh", background: "linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%)" }} horizontal="center" vertical>
-      <Column as="section" fill center padding="40" style={{ background: "#fff", borderRadius: "18px", boxShadow: "0 4px 24px rgba(0,0,0,0.06)", maxWidth: 400, margin: 24 }}>
+    <Flex style={{ minHeight: "100vh", background: "linear-gradient(135deg, #f8fafc 0%, #e0e7ef 100%)" }} horizontal="center" vertical="center">
+      <Column as="section" fill padding="40" style={{ background: "#fff", borderRadius: "18px", boxShadow: "0 4px 24px rgba(0,0,0,0.06)", maxWidth: 400, margin: 24 }}>
         {/* Simple SVG illustration */}
         <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginBottom: 24 }}>
           <circle cx="40" cy="40" r="38" fill="#e0e7ef" />
