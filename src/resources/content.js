@@ -181,12 +181,12 @@ const about = {
             height: 9,
           },
 
-          // {
-          //   src: "/images/projects/project-01/fs2.jpg",
-          //   alt: "Project image",
-          //   width: 16,
-          //   height: 9,
-          // },
+          {
+            src: "/images/projects/project-01/fs2.jpg",
+            alt: "Project image",
+            width: 16,
+            height: 9,
+          },
         ],
       },
       {
