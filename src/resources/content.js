@@ -123,30 +123,30 @@ const about = {
           },
         ],
       },
-      // {
-      //   company: "Cobble.gg",
-      //   timeframe: "June 2024 - Oct 2024",
-      //   role: "Junior Developer",
-      //   achievements: [
-      //     <>
-      //       Developed a website for Cobble.gg, a Minecraft server hosting platform, improving
-      //       the user experience and increasing engagement.
-      //     </>,
-      //     <>
-      //       Help them to grow and attract more consumers with professional approach and increase visibilty
-      //     </>,
-      //   ],
-      //   images: [
-      //     {
-      //       src: "/images/projects/project-01/c2.jpg",
-      //       alt: "Cobble.gg",
-      //       width:16,
-      //       height:9,
-      //     },
-      //   ],
-      // },
-  //   ],
-  // },
+      {
+        company: "Cobble.gg",
+        timeframe: "June 2024 - Oct 2024",
+        role: "Junior Developer",
+        achievements: [
+          <>
+            Developed a website for Cobble.gg, a Minecraft server hosting platform, improving
+            the user experience and increasing engagement.
+          </>,
+          <>
+            Help them to grow and attract more consumers with professional approach and increase visibilty
+          </>,
+        ],
+        images: [
+          {
+            src: "/images/projects/project-01/c2.jpg",
+            alt: "Cobble.gg",
+            width:16,
+            height:9,
+          },
+        ],
+      },
+    ],
+  },
   studies: {
     display: true, 
     title: "Studies",
