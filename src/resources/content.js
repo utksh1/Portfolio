@@ -95,7 +95,7 @@ const about = {
     ),
   },
   work: {
-    display: true, // set to false to hide this section
+    display: true, 
     title: "Work Experience",
     experiences: [
       {
@@ -114,7 +114,7 @@ const about = {
           </>,
         ],
         images: [
-          // optional: leave the array empty if you don't want to display images
+        
           {
             src: "/images/projects/project-01/c1.jpg",
             alt: "Minexnodes",
@@ -148,7 +148,7 @@ const about = {
   //   ],
   // },
   studies: {
-    display: true, // set to false to hide this section
+    display: true, 
     title: "Studies",
     institutions: [
       {
@@ -163,14 +163,13 @@ const about = {
     ],
   },
   technical: {
-    display: true, // set to false to hide this section
+    display: true, 
     title: "Technical skills",
     skills: [
       {
         title: "Full-Stack Web Development--",
         description: <>Built full-stack web apps like CampusConnect and Hostel System
         using PHP, MariaDB, and role-based auth.</>,
-        // optional: leave the array empty if you don't want to display images
         images: [
           {
             src: "/images/projects/project-01/fs.jpg",
@@ -190,7 +189,6 @@ const about = {
       {
         title: "Data Structures and Algorithm",
         description: <>Proficient in designing efficient algorithms and implementing robust data structures to solve complex computational problems. Experienced with real-world applications and optimization techniques.</>,
-        // optional: leave the array empty+-if you don't want to display images
         images: [
           {
             src: "/images/projects/project-01/cover-04.jpg",
@@ -208,8 +206,7 @@ const blog = {
   label: "Blog",
   title: "Writing about design and tech...",
   description: `Read what ${person.name} has been up to recently`,
-  // Create new blog posts by adding a new .mdx file to app/blog/posts
-  // All posts will be listed on the /blog route
+
 };
 
 const work = {
@@ -217,8 +214,7 @@ const work = {
   label: "Work",
   title: `Projects – ${person.name}`,
   description: `Design and dev projects by ${person.name}`,
-  // Create new project pages by adding a new .mdx file to app/blog/posts
-  // All projects will be listed on the /home and /work routes
+
 };
 
 const gallery = {
@@ -226,8 +222,7 @@ const gallery = {
   label: "Gallery",
   title: `Photo gallery – ${person.name}`,
   description: `A photo collection by ${person.name}`,
-  // Images by https://lorant.one
-  // These are placeholder images, replace with your own
+
   images: [
     {
       src: "/images/gallery/cert1.jpg",
