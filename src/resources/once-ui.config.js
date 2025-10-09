@@ -1,6 +1,5 @@
 import { home } from "./content";
 
-// IMPORTANT: Replace with your own domain address - it's used for SEO in meta tags and schema
 const baseURL = "https://demo.magic-portfolio.com";
 
 const routes = {
@@ -17,13 +16,10 @@ const display = {
   themeSwitcher: true
 };
 
-// Enable password protection on selected routes
-// Set password in the .env file, refer to .env.example
 const protectedRoutes = {
-  "/work/automate-design-handovers-with-a-figma-to-code-pipeline": true,
+  "/work/automate-design-handovers-with-a-figma-to-code-pipeline": false,
 };
 
-// Import and set font for each variant
 import { Geist } from "next/font/google";
 import { Geist_Mono } from "next/font/google";
 
@@ -58,24 +54,24 @@ const fonts = {
   code: code,
 };
 
-// default customization applied to the HTML in the main layout.tsx
+
 const style = {
-  theme: "system", // dark | light | system
-  neutral: "gray", // sand | gray | slate | custom
-  brand: "cyan", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan | custom
-  accent: "red", // blue | indigo | violet | magenta | pink | red | orange | yellow | moss | green | emerald | aqua | cyan | custom
-  solid: "contrast", // color | contrast
-  solidStyle: "flat", // flat | plastic
-  border: "playful", // rounded | playful | conservative
-  surface: "translucent", // filled | translucent
-  transition: "all", // all | micro | macro
-  scaling: "100" // 90 | 95 | 100 | 105 | 110
+  theme: "system",
+  neutral: "gray",
+  brand: "cyan",
+  accent: "red",
+  solid: "contrast", 
+  solidStyle: "flat", 
+  border: "playful", 
+  surface: "translucent", 
+  transition: "all", 
+  scaling: "100" 
 };
 
 const dataStyle = {
-  variant: "gradient", // flat | gradient | outline
-  mode: "categorical", // categorical | divergent | sequential
-  height: 24, // default chart height
+  variant: "gradient",
+  mode: "categorical", 
+  height: 24,
   axis: {
     stroke: "var(--neutral-alpha-weak)",
   },
@@ -171,7 +167,7 @@ const mailchimp = {
   }
 };
 
-// default schema data
+
 const schema = {
   logo: "",
   type: "Organization",
@@ -180,7 +176,7 @@ const schema = {
   email: "lorant@once-ui.com",
 };
 
-// social links
+
 const sameAs = {
   threads: "https://www.threads.com/@once_ui",
   linkedin: "https://www.linkedin.com/company/once-ui/",
