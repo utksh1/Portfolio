@@ -9,8 +9,8 @@ const person = {
   role: "Web Developer",
   avatar: "/images/avatar.jpg",
   email: "Utkarshsingh60101@gmail.com",
-  location: "Asia/Kolkata", // Expecting the IANA time zone identifier, e.g., 'Europe/Vienna'
-  languages: ["English", "Hindi"], // optional: Leave the array empty if you don't want to display languages
+  location: "Asia/Kolkata", 
+  languages: ["English", "Hindi"],
 };
 
 const newsletter = {
@@ -25,8 +25,6 @@ const newsletter = {
 };
 
 const social = [
-  // Links are automatically displayed.
-  // Import new icons in /once-ui/icons.ts
   {
     name: "GitHub",
     icon: "github",
@@ -63,8 +61,8 @@ const home = {
   },
   subline: (
     <>
-      I'm Utkarsh, a Web Developer at <a href="https://minexnodes.com" target="_blank"  >Minexnodes</a>, where I design seamless and intuitive
-      <br /> user experiences that elevate server performance and usability.
+      I'm Utkarsh, a Web Developer Freelancer, where I design seamless and intuitive
+      <br /> user experiences that elevate web performance and usability.
     </>
   ),
 };
@@ -102,7 +100,7 @@ const about = {
     experiences: [
       {
         company: "Minexnodes Hosting",
-        timeframe: "Nov 2024 - Present",
+        timeframe: "Dec 2024 - Sept 2025",
         role: "Server Manager",
         achievements: [
           <>
@@ -125,30 +123,30 @@ const about = {
           },
         ],
       },
-      {
-        company: "Cobble.gg",
-        timeframe: "June 2024 - Oct 2024",
-        role: "Junior Developer",
-        achievements: [
-          <>
-            Developed a website for Cobble.gg, a Minecraft server hosting platform, improving
-            the user experience and increasing engagement.
-          </>,
-          <>
-            Help them to grow and attract more consumers with professional approach and increase visibilty
-          </>,
-        ],
-        images: [
-          {
-            src: "/images/projects/project-01/c2.jpg",
-            alt: "Cobble.gg",
-            width:16,
-            height:9,
-          },
-        ],
-      },
-    ],
-  },
+      // {
+      //   company: "Cobble.gg",
+      //   timeframe: "June 2024 - Oct 2024",
+      //   role: "Junior Developer",
+      //   achievements: [
+      //     <>
+      //       Developed a website for Cobble.gg, a Minecraft server hosting platform, improving
+      //       the user experience and increasing engagement.
+      //     </>,
+      //     <>
+      //       Help them to grow and attract more consumers with professional approach and increase visibilty
+      //     </>,
+      //   ],
+      //   images: [
+      //     {
+      //       src: "/images/projects/project-01/c2.jpg",
+      //       alt: "Cobble.gg",
+      //       width:16,
+      //       height:9,
+      //     },
+      //   ],
+      // },
+  //   ],
+  // },
   studies: {
     display: true, // set to false to hide this section
     title: "Studies",
