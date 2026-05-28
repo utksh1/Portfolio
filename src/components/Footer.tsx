@@ -1,5 +1,5 @@
 import { Flex, IconButton, SmartLink, Text } from "@once-ui-system/core";
-import { person, social } from "@/resources";
+import { person, social, home, about, blog, work, gallery } from "@/resources";
 import styles from "./Footer.module.scss";
 
 export const Footer = () => {
@@ -9,39 +9,82 @@ export const Footer = () => {
     <Flex
       as="footer"
       fillWidth
-      padding="8"
+      paddingY="32"
+      paddingX="16"
       horizontal="center"
-      mobileDirection="column"
+      style={{
+        borderTop: "1px solid var(--neutral-alpha-medium)",
+        marginTop: "64px"
+      }}
     >
       <Flex
-        className={styles.mobile}
-        maxWidth="m"
-        paddingY="8"
-        paddingX="16"
-        gap="16"
-        horizontal="space-between"
-        vertical="center"
+        className={styles.footerContainer}
+        maxWidth="l"
+        fillWidth
+        horizontal="between"
+        vertical="start"
+        gap="32"
+        s={{ direction: "column", horizontal: "center", gap: "24" }}
       >
-        <Text variant="body-default-s" onBackground="neutral-strong">
-          <Text onBackground="neutral-weak">Portfolio © {currentYear}</Text>
-        </Text>
-        <Flex gap="16">
-          {social.map(
-            (item) =>
-              item.link && (
-                <IconButton
-                  key={item.name}
-                  href={item.link}
-                  icon={item.icon}
-                  tooltip={item.name}
-                  size="s"
-                  variant="ghost"
-                />
-              ),
-          )}
+        {/* Left Side: Brand and Copyright */}
+        <Flex direction="column" gap="8" s={{ horizontal: "center", textAlign: "center" }}>
+          <Text variant="heading-strong-s" onBackground="neutral-strong">
+            {person.name}
+          </Text>
+          <Text variant="body-default-xs" onBackground="neutral-weak" marginTop="8">
+            © {currentYear} {person.name}. All rights reserved.
+          </Text>
+        </Flex>
+
+        {/* Right Side: Links and Socials */}
+        <Flex direction="column" gap="16" horizontal="end" s={{ horizontal: "center", gap: "16" }}>
+          {/* Nav Links */}
+          <Flex gap="24" wrap s={{ gap: "16", horizontal: "center" }}>
+            <SmartLink href={home.path} style={{ textDecoration: "none" }}>
+              <Text variant="body-default-s" onBackground="neutral-weak" className={styles.footerLink}>
+                {home.label}
+              </Text>
+            </SmartLink>
+            <SmartLink href={about.path} style={{ textDecoration: "none" }}>
+              <Text variant="body-default-s" onBackground="neutral-weak" className={styles.footerLink}>
+                {about.label}
+              </Text>
+            </SmartLink>
+            <SmartLink href={work.path} style={{ textDecoration: "none" }}>
+              <Text variant="body-default-s" onBackground="neutral-weak" className={styles.footerLink}>
+                {work.label}
+              </Text>
+            </SmartLink>
+            <SmartLink href={blog.path} style={{ textDecoration: "none" }}>
+              <Text variant="body-default-s" onBackground="neutral-weak" className={styles.footerLink}>
+                {blog.label}
+              </Text>
+            </SmartLink>
+            <SmartLink href={gallery.path} style={{ textDecoration: "none" }}>
+              <Text variant="body-default-s" onBackground="neutral-weak" className={styles.footerLink}>
+                {gallery.label}
+              </Text>
+            </SmartLink>
+          </Flex>
+
+          {/* Social Icons */}
+          <Flex gap="12">
+            {social.map(
+              (item) =>
+                item.link && (
+                  <IconButton
+                    key={item.name}
+                    href={item.link}
+                    icon={item.icon}
+                    tooltip={item.name}
+                    size="s"
+                    variant="ghost"
+                  />
+                ),
+            )}
+          </Flex>
         </Flex>
       </Flex>
-      <Flex height="80" show="s"></Flex>
     </Flex>
   );
 };

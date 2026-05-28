@@ -1,5 +1,6 @@
 import { MDXRemote, MDXRemoteProps } from "next-mdx-remote/rsc";
 import React, { ReactNode } from "react";
+import MermaidDiagram from "@/components/MermaidDiagram";
 
 import { 
   Heading,
@@ -21,6 +22,7 @@ import {
   Icon,
   Media,
   SmartLink,
+  Flex,
 } from "@once-ui-system/core";
 
 type CustomLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
@@ -130,6 +132,11 @@ function createCodeBlock(props: any) {
     // Extract language from className (format: language-xxx)
     const language = className.replace('language-', '');
     const label = language.charAt(0).toUpperCase() + language.slice(1);
+    
+    if (language === 'mermaid') {
+      return <MermaidDiagram chart={children} />;
+    }
+
     
     return (
       <CodeBlock

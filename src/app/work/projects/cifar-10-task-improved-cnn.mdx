@@ -1,0 +1,156 @@
+---
+title: "CIFAR-10 Improved CNN: Small-data image classification optimization."
+publishedAt: "2026-02-15"
+summary: "A machine learning notebook project focused on improving CNN performance on CIFAR-10 subsets using batch normalization, data augmentation, and PyTorch-based training experiments."
+images: []
+team:
+  - name: "Utkarsh Singh"
+    role: "ML Developer"
+    avatar: "/images/photo.jpeg"
+    linkedIn: "https://www.linkedin.com/in/utksh"
+link: "https://github.com/utksh1/CIFAR-10-task-Improved-CNN"
+---
+
+## Overview
+
+CIFAR-10 Improved CNN is a computer-vision project focused on improving convolutional neural network performance under constrained data conditions. Instead of only training a baseline model, the project explores how architectural and training choices affect accuracy, convergence, and generalization.
+
+The core techniques are batch normalization and data augmentation. Both are common in modern deep-learning workflows, but the project is valuable because it studies why they matter, especially when the model is trained on smaller subsets of data.
+
+This project adds an ML engineering dimension to my portfolio. It shows experimentation, model iteration, and the ability to reason about training behavior rather than treating machine learning as a black box.
+
+---
+
+## Problem
+
+CIFAR-10 is a standard image-classification dataset, but training on limited data makes the task harder. A CNN can quickly overfit: it learns patterns in the training subset but fails to generalize well to unseen images.
+
+The project investigates how to improve performance when the available training data is constrained.
+
+The main problems were:
+
+- Avoiding overfitting on small data subsets.
+- Improving convergence stability during training.
+- Increasing robustness through image transformations.
+- Comparing a basic CNN against improved training strategies.
+- Making the experiment understandable through notebook-based analysis.
+
+---
+
+## Dataset
+
+CIFAR-10 contains small color images across ten object categories. The images are low resolution, which makes the dataset lightweight enough for experimentation but still complex enough to reveal meaningful differences in model design.
+
+The dataset is useful for this project because:
+
+- It is well-known and easy to benchmark.
+- It contains multiple visually distinct classes.
+- It is small enough for fast iteration.
+- It still exposes overfitting and generalization problems.
+
+---
+
+## Approach
+
+The project follows a practical ML workflow:
+
+```text
+Load CIFAR-10 data
+  -> create training and validation splits
+  -> define baseline CNN
+  -> train and evaluate baseline
+  -> add batch normalization
+  -> add data augmentation
+  -> compare training behavior and metrics
+```
+
+The focus is not only on the final number. It is also on understanding how each change affects the model.
+
+```mermaid
+flowchart TD
+    Data["CIFAR-10 Dataset"] --> Split["Train / Validation Split"]
+    Split --> Augment["Data Augmentation"]
+    Augment --> CNN["CNN Model"]
+    CNN --> BN["Batch Normalization"]
+    BN --> Train["Training Loop"]
+    Train --> Eval["Validation Metrics"]
+    Eval --> Compare["Compare Against Baseline"]
+```
+
+---
+
+## Model Improvements
+
+### Batch Normalization
+
+Batch normalization helps stabilize internal activations during training. In practice, that can lead to:
+
+- Faster convergence.
+- More stable gradients.
+- Better tolerance for learning-rate choices.
+- Reduced sensitivity to initialization.
+
+For a CNN trained on small image data, this can make the training process more predictable.
+
+### Data Augmentation
+
+Data augmentation artificially increases variation in the training data by applying transformations such as flips, crops, or other image changes. This helps the model learn more robust visual patterns rather than memorizing exact examples.
+
+The practical benefit is improved generalization. A model that sees many transformed versions of the data is less likely to depend on fragile pixel-level shortcuts.
+
+---
+
+## Key Features
+
+- **CNN Architecture Iteration**: Experiments with convolutional model structure for image classification.
+- **Batch Normalization**: Improves training stability and convergence behavior.
+- **Data Augmentation**: Adds variation to limited training data to reduce overfitting.
+- **PyTorch Workflow**: Uses notebook-based training, evaluation, and result inspection.
+- **CIFAR-10 Benchmarking**: Uses a standard dataset for meaningful comparison.
+- **Small-Data Focus**: Studies performance under constrained training conditions.
+
+---
+
+## Technical Stack
+
+- **Language**: Python.
+- **Environment**: Jupyter Notebook.
+- **ML Framework**: PyTorch.
+- **Dataset**: CIFAR-10.
+- **Techniques**: CNNs, batch normalization, data augmentation, training loops, evaluation metrics.
+
+---
+
+## Evaluation
+
+Evaluation in this project is about more than a single accuracy score. A useful comparison looks at:
+
+- Training accuracy versus validation accuracy.
+- Whether validation performance improves with augmentation.
+- Whether loss curves become smoother with normalization.
+- How quickly each model begins to converge.
+- Whether the improved model overfits less than the baseline.
+
+This style of evaluation makes the notebook more educational and shows the reasoning behind model changes.
+
+---
+
+## Challenges
+
+Small-data training creates tradeoffs. A model that is too simple may underfit; a model that is too expressive may memorize the training subset. Augmentation can help, but too much augmentation can make learning harder if transformations are unrealistic.
+
+The challenge was to find practical improvements without turning the notebook into an uncontrolled experiment with too many variables.
+
+---
+
+## What I Learned
+
+This project reinforced that model quality is often improved through disciplined iteration rather than one dramatic change. Batch normalization, augmentation, and architecture adjustments each solve different parts of the training problem.
+
+It also improved my ability to explain ML results in engineering terms: not just what changed, but why the change helped.
+
+---
+
+## What It Shows
+
+CIFAR-10 Improved CNN adds machine-learning credibility to the portfolio. It demonstrates experimentation discipline, PyTorch workflow skills, and an understanding of model generalization on image-classification tasks.

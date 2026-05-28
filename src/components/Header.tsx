@@ -35,7 +35,7 @@ const TimeDisplay: React.FC<TimeDisplayProps> = ({ timeZone, locale = "en-GB" })
     const intervalId = setInterval(updateTime, 1000);
 
     return () => clearInterval(intervalId);
-  }, ["timeZone", locale]);
+  }, [timeZone, locale]);
 
   return <>{currentTime}</>;
 };
@@ -47,8 +47,8 @@ export const Header = () => {
 
   return (
     <>
-      <Fade hide="s" fillWidth position="fixed" height="80" zIndex={9} />
-      <Fade show="s" fillWidth position="fixed" bottom="0" to="top" height="80" zIndex={9} />
+      <Fade className="s-flex-hide" fillWidth position="fixed" height="80" zIndex={9} />
+      <Fade className="s-flex-show" fillWidth position="fixed" bottom="0" to="top" height="80" zIndex={9} />
       <Flex
         fitHeight
         position="unset"
@@ -61,7 +61,7 @@ export const Header = () => {
         data-border="rounded"
       >
         <Flex paddingLeft="12" fillWidth vertical="center" textVariant="body-default-s">
-          {display.location && <Flex hide="s">{person.location}</Flex>}
+          {display.location && <Flex className="s-flex-hide">{person.location}</Flex>}
         </Flex>
         <Flex fillWidth horizontal="center">
           <Flex
@@ -80,70 +80,78 @@ export const Header = () => {
               <Line background="neutral-alpha-medium" vert maxHeight="24" />
               {routes["/about"] && (
                 <>
-                  <ToggleButton
-                    className="s-flex-hide"
-                    prefixIcon="person"
-                    href="/about"
-                    label={about.label}
-                    selected={pathname === "/about"}
-                  />
-                  <ToggleButton
-                    className="s-flex-show"
-                    prefixIcon="person"
-                    href="/about"
-                    selected={pathname === "/about"}
-                  />
+                  <Flex className="s-flex-hide">
+                    <ToggleButton
+                      prefixIcon="person"
+                      href="/about"
+                      label={about.label}
+                      selected={pathname === "/about"}
+                    />
+                  </Flex>
+                  <Flex className="s-flex-show">
+                    <ToggleButton
+                      prefixIcon="person"
+                      href="/about"
+                      selected={pathname === "/about"}
+                    />
+                  </Flex>
                 </>
               )}
               {routes["/work"] && (
                 <>
-                  <ToggleButton
-                    className="s-flex-hide"
-                    prefixIcon="grid"
-                    href="/work"
-                    label={work.label}
-                    selected={pathname.startsWith("/work")}
-                  />
-                  <ToggleButton
-                    className="s-flex-show"
-                    prefixIcon="grid"
-                    href="/work"
-                    selected={pathname.startsWith("/work")}
-                  />
+                  <Flex className="s-flex-hide">
+                    <ToggleButton
+                      prefixIcon="grid"
+                      href="/work"
+                      label={work.label}
+                      selected={pathname.startsWith("/work")}
+                    />
+                  </Flex>
+                  <Flex className="s-flex-show">
+                    <ToggleButton
+                      prefixIcon="grid"
+                      href="/work"
+                      selected={pathname.startsWith("/work")}
+                    />
+                  </Flex>
                 </>
               )}
               {routes["/blog"] && (
                 <>
-                  <ToggleButton
-                    className="s-flex-hide"
-                    prefixIcon="book"
-                    href="/blog"
-                    label={blog.label}
-                    selected={pathname.startsWith("/blog")}
-                  />
-                  <ToggleButton
-                    className="s-flex-show"
-                    prefixIcon="book"
-                    href="/blog"
-                    selected={pathname.startsWith("/blog")}
-                  />
+                  <Flex className="s-flex-hide">
+                    <ToggleButton
+                      prefixIcon="book"
+                      href="/blog"
+                      label={blog.label}
+                      selected={pathname.startsWith("/blog")}
+                    />
+                  </Flex>
+                  <Flex className="s-flex-show">
+                    <ToggleButton
+                      prefixIcon="book"
+                      href="/blog"
+                      selected={pathname.startsWith("/blog")}
+                    />
+                  </Flex>
                 </>
               )}
               {routes["/gallery"] && (
                 <>
-                  <ToggleButton
-                    className="s-flex-hide"
-                    prefixIcon="gallery"
-                    href="/gallery"
-                    label={gallery.label}
-                    selected={pathname.startsWith("/gallery")}
-                  />
-                  <ToggleButton
-                    className="s-flex-show"
-                    prefixIcon="gallery"
-                    href="/gallery"
-                    selected={pathname.startsWith("/gallery")}
-                  />
+                  <Flex className="s-flex-hide">
+                    <ToggleButton
+                      prefixIcon="gallery"
+                      href="/gallery"
+                      label={gallery.label}
+                      selected={pathname.startsWith("/gallery")}
+                    />
+                  </Flex>
+                  <Flex className="s-flex-show">
+                    <ToggleButton
+                      prefixIcon="gallery"
+                      href="/gallery"
+                      selected={pathname.startsWith("/gallery")}
+                    />
+                  </Flex>
                 </>
               )}
               {display.themeSwitcher && (
@@ -163,7 +171,7 @@ export const Header = () => {
             textVariant="body-default-s"
             gap="20"
           >
-            <Flex hide="s">{display.time && <TimeDisplay timeZone="Asia/Kolkata" />}</Flex>
+            <Flex className="s-flex-hide">{display.time && <TimeDisplay timeZone={person.timeZone} />}</Flex>
           </Flex>
         </Flex>
       </Flex>

@@ -1,0 +1,136 @@
+---
+title: "Kirtos: Local-first voice-driven AI assistant for macOS."
+publishedAt: "2026-03-06"
+summary: "A local-first desktop assistant concept for macOS that combines voice interaction, AI workflows, and desktop automation into a Jarvis-style personal productivity tool."
+images: []
+team:
+  - name: "Utkarsh Singh"
+    role: "Lead Developer"
+    avatar: "/images/photo.jpeg"
+    linkedIn: "https://www.linkedin.com/in/utksh"
+link: "https://github.com/utksh1/kirtos"
+---
+
+## Overview
+
+Kirtos is a local-first, voice-driven AI assistant concept for macOS. The project explores what a desktop-native assistant could feel like if it were designed around spoken commands, local workflows, and fast access to personal productivity actions.
+
+The idea is similar in spirit to a Jarvis-style assistant, but the engineering focus is practical: voice input, intent understanding, command routing, and desktop-oriented actions.
+
+Kirtos is valuable in my portfolio because it sits at the intersection of AI interfaces, local-first software, desktop tooling, and human-computer interaction. It is not just another chatbot UI; it is an experiment in making AI feel more embedded in the operating environment.
+
+---
+
+## Problem
+
+Most AI assistants live inside a browser tab or chat window. That is useful, but it creates friction when the user wants to perform local actions or move quickly between tasks. A desktop assistant should feel closer to the actual work environment.
+
+The project asks:
+
+- What if AI interaction started with voice instead of typing?
+- What if the assistant could be designed around local workflows?
+- How can natural-language intent become structured actions?
+- How can the assistant stay useful without becoming intrusive?
+
+---
+
+## Product Vision
+
+The long-term vision for Kirtos is a macOS assistant that can:
+
+- Listen for user commands.
+- Interpret the requested task.
+- Route the task to the right workflow.
+- Provide feedback quickly.
+- Keep user control and local context central.
+
+The goal is not to make an assistant that tries to do everything at once. The goal is to build a foundation that can grow into reliable, focused workflows.
+
+---
+
+## Architecture
+
+At a high level, Kirtos can be thought of as an intent pipeline:
+
+```text
+Voice input
+  -> speech-to-text
+  -> intent parsing
+  -> command router
+  -> local workflow/action
+  -> response or confirmation
+```
+
+This architecture keeps the assistant modular. Voice capture, AI interpretation, command execution, and UI feedback are separate concerns. That separation matters because each layer has different failure modes.
+
+```mermaid
+flowchart TD
+    Voice["Voice Input"] --> STT["Speech-to-Text"]
+    STT --> Intent["Intent Parser"]
+    Intent --> Router["Command Router"]
+    Router --> Local["Local macOS Workflow"]
+    Router --> AI["AI Reasoning Step"]
+    Local --> Feedback["Response / Confirmation"]
+    AI --> Feedback
+```
+
+---
+
+## Key Features
+
+- **Voice-First Interaction**: Designed around spoken commands rather than only typed prompts.
+- **Local-First Direction**: Prioritizes user control and desktop-side execution where possible.
+- **AI Workflow Layer**: Maps natural-language requests to structured assistant actions.
+- **macOS Productivity Focus**: Targets everyday desktop workflows instead of generic chat.
+- **Expandable Command Model**: Can grow by adding new intents and action handlers.
+
+---
+
+## Technical Stack
+
+- **Runtime**: JavaScript-based application logic.
+- **AI Interaction**: Prompt and command handling for assistant workflows.
+- **Platform Direction**: macOS-oriented desktop assistant experience.
+- **Interface Model**: Voice-driven input and assistant-style feedback.
+
+---
+
+## Design Decisions
+
+The most important design decision is local-first framing. Even when AI services are involved, the assistant should feel like it belongs to the user’s machine, not like a remote webpage pretending to be local.
+
+That means prioritizing:
+
+- Low-friction activation.
+- Clear confirmation before sensitive actions.
+- Predictable command routing.
+- Small, reliable workflows over vague general autonomy.
+- A UI that supports the task instead of becoming the main event.
+
+---
+
+## Challenges
+
+Voice assistants introduce challenges that text interfaces can avoid:
+
+- Speech recognition can mishear commands.
+- Natural language can be ambiguous.
+- Users need feedback when intent is uncertain.
+- Local actions may require permissions or confirmations.
+- The assistant must be useful without feeling disruptive.
+
+These constraints make the project a good exercise in designing AI systems that respect user control.
+
+---
+
+## What I Learned
+
+Kirtos helped me think more deeply about AI product design. The hard part is not only connecting to a model. The hard part is building a reliable interaction loop where the user says something, the system understands the intent, and the result is useful.
+
+It also reinforced the importance of limiting scope. A strong assistant should start with a few dependable workflows before expanding into broader automation.
+
+---
+
+## What It Shows
+
+Kirtos adds an AI-product angle to the portfolio. It shows interest in agent interfaces, voice UX, local-first software, and practical assistant tooling beyond a basic chatbot.

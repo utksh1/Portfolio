@@ -1,7 +1,19 @@
 @use "./breakpoints.scss" as breakpoints;
 
+.footerContainer {
+    width: 100%;
+}
+
+.footerLink {
+    transition: color var(--transition-micro-medium) ease !important;
+
+    &:hover {
+        color: var(--neutral-on-background) !important;
+    }
+}
+
 @media (max-width: breakpoints.$s) {
-    .mobile {
+    .footerContainer {
         text-align: center;
         flex-direction: column;
         align-items: center;

@@ -36,9 +36,10 @@ export default async function RootLayout({
         fonts.code.variable,
       )}
     >
-      <head>
+      <head suppressHydrationWarning>
         <script
           id="theme-init"
+          suppressHydrationWarning
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
@@ -96,7 +97,7 @@ export default async function RootLayout({
         />
       </head>
       <Providers>
-        <Column as="body" background="page" fillWidth style={{minHeight: "100vh"}} margin="0" padding="0" horizontal="center">
+        <Column suppressHydrationWarning as="body" background="page" fillWidth style={{minHeight: "100vh"}} margin="0" padding="0" horizontal="center">
           <Background
             position="fixed"
             mask={{
@@ -138,7 +139,7 @@ export default async function RootLayout({
               color: effects.lines.color,
             }}
           />
-          <Flex fillWidth minHeight="16" hide="s"/>
+          <Flex className="s-flex-hide" fillWidth minHeight="16"/>
             <Header />
             <Flex
               zIndex={0}

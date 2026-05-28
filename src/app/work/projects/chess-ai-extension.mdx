@@ -1,0 +1,134 @@
+---
+title: "Chess AI Extension: Stockfish-powered Chess.com analysis tool."
+publishedAt: "2026-05-02"
+summary: "A browser extension powered by Stockfish 16.1 that analyzes Chess.com positions and demonstrates engine integration, browser automation, and game-state parsing."
+images: []
+team:
+  - name: "Utkarsh Singh"
+    role: "Lead Developer"
+    avatar: "/images/photo.jpeg"
+    linkedIn: "https://www.linkedin.com/in/utksh"
+link: "https://github.com/utksh1/chess-ai-extension"
+---
+
+## Overview
+
+Chess AI Extension is a browser-based project that integrates the Stockfish 16.1 chess engine with Chess.com. It explores how a browser extension can read a live web interface, interpret a chess position, and connect that position to a high-strength chess engine.
+
+The project is interesting because it combines several different domains: browser extension development, DOM interaction, game-state parsing, engine integration, and real-time user feedback.
+
+It is also a good example of applied AI that does not rely on a language model. Stockfish is a specialized search and evaluation engine, and integrating it into a browser workflow requires a different kind of engineering discipline.
+
+---
+
+## Problem
+
+Chess.com presents a rich interactive board, but a browser extension has to understand that board from the outside. It cannot simply ask the application for a clean internal state unless such state is exposed. The extension needs a way to infer or extract:
+
+- Which pieces are on which squares.
+- Whose turn it is.
+- Whether the board is flipped.
+- What the current legal context is.
+- How to convert the position into a format Stockfish understands.
+
+The core challenge is bridging a visual web application and a chess engine that expects structured position data.
+
+---
+
+## Goals
+
+The project was designed around these goals:
+
+- Integrate Stockfish 16.1 in a browser-extension context.
+- Extract or reconstruct board state from Chess.com.
+- Convert the board into engine-readable notation.
+- Run position evaluation and move analysis.
+- Present useful feedback without making the page feel broken or overloaded.
+
+---
+
+## Architecture
+
+The project can be understood as a pipeline:
+
+```text
+Chess.com board
+  -> extension content script
+  -> board-state extraction
+  -> position encoding
+  -> Stockfish analysis
+  -> result formatting
+  -> UI feedback
+```
+
+Each stage has to be reliable. If the board extraction is wrong, the engine analysis becomes meaningless. If the engine output is not parsed correctly, the interface cannot provide useful information.
+
+```mermaid
+flowchart LR
+    Board["Chess.com Board"] --> Content["Extension Content Script"]
+    Content --> Parser["Board-State Parser"]
+    Parser --> FEN["Position Encoding"]
+    FEN --> Engine["Stockfish 16.1"]
+    Engine --> Result["Best Move / Evaluation"]
+    Result --> Overlay["Extension UI Feedback"]
+```
+
+---
+
+## Key Features
+
+- **Stockfish 16.1 Integration**: Uses a proven chess engine for position evaluation and move search.
+- **Browser Extension Workflow**: Runs alongside an active Chess.com page.
+- **Game-State Parsing**: Reads board context and translates it into engine-ready input.
+- **Interactive Analysis**: Gives users engine-backed insight from the current board position.
+- **Niche AI Integration**: Demonstrates how specialized engines can be embedded into user-facing tools.
+
+---
+
+## Technical Stack
+
+- **Language**: JavaScript.
+- **Platform**: Browser extension architecture.
+- **Engine**: Stockfish 16.1.
+- **Domain Logic**: Chess board parsing, position encoding, and move analysis.
+- **Integration Surface**: Content scripts and page-level interaction.
+
+---
+
+## Engineering Decisions
+
+The most important engineering decision was to separate board detection from engine analysis. Those concerns should not be tangled:
+
+- Board parsing should produce a clean position representation.
+- Engine integration should consume that representation.
+- UI rendering should display the result without knowing the details of engine execution.
+
+This separation makes the extension easier to debug. If analysis seems wrong, it becomes possible to inspect whether the board parser, notation converter, engine call, or display layer is responsible.
+
+---
+
+## Challenges
+
+Browser extensions are sensitive to changes in the target website. A small markup or class-name change can break DOM-dependent logic. Chess boards also introduce special cases:
+
+- Board orientation may change.
+- Piece positions need exact square mapping.
+- Move state changes quickly.
+- The extension has to avoid slowing down the page.
+- Engine output can be verbose and needs parsing.
+
+These constraints make the project a strong exercise in careful integration work.
+
+---
+
+## What I Learned
+
+This project helped me practice working with a specialized external engine inside a browser environment. It also reinforced the importance of designing adapters between messy real-world interfaces and clean domain logic.
+
+The most valuable learning was that good tooling often comes from translation: taking a complex system like Chess.com, a powerful engine like Stockfish, and building a small layer that lets them cooperate.
+
+---
+
+## What It Shows
+
+Chess AI Extension adds a memorable niche project to the portfolio. It shows browser extension skills, game-domain logic, third-party page integration, and applied AI through a high-performance chess engine.

@@ -1,0 +1,181 @@
+---
+title: "chatgpt-to-api: OpenAI-compatible gateway for ChatGPT Web."
+publishedAt: "2026-05-25"
+summary: "An unofficial API gateway that translates OpenAI-style chat requests into ChatGPT Web conversations, including browser-session authentication, streaming responses, and compatibility-focused request handling."
+images: []
+team:
+  - name: "Utkarsh Singh"
+    role: "Lead Developer"
+    avatar: "/images/photo.jpeg"
+    linkedIn: "https://www.linkedin.com/in/utksh"
+link: "https://github.com/utksh1/chatgpt-to-api"
+---
+
+## Overview
+
+chatgpt-to-api is an API compatibility gateway that lets tools expecting an OpenAI-style API shape communicate with ChatGPT Web-style conversations. The project exists at the boundary between developer tooling, protocol translation, and backend reliability.
+
+The core idea is simple: a client should be able to send a familiar chat request, and the gateway should handle the uncomfortable parts behind the scenes. Those uncomfortable parts include browser-session authentication, upstream request formatting, model routing, streaming response translation, and compatibility with clients that expect OpenAI-like endpoints.
+
+This project is important in my portfolio because it demonstrates backend engineering that is not only CRUD. It involves reverse-engineering behavior, preserving compatibility, designing trust boundaries, and making multiple systems speak a common language.
+
+---
+
+## Problem
+
+Many developer tools, editors, dashboards, and scripts are built around OpenAI-compatible request formats. They expect endpoints such as chat completions, a `messages` array, model identifiers, and either JSON or streaming output.
+
+ChatGPT Web does not naturally expose the same shape. It uses browser session state, different upstream payloads, conversation identifiers, and response formats that are not directly interchangeable with standard API clients.
+
+The gateway solves this mismatch:
+
+```text
+OpenAI-style client
+  -> familiar API request
+  -> compatibility gateway
+  -> ChatGPT Web session/auth handling
+  -> upstream conversation request
+  -> translated response back to the client
+```
+
+---
+
+## Goals
+
+The project was designed around a few practical goals:
+
+- Let existing OpenAI-compatible tools call a local or hosted gateway.
+- Hide ChatGPT Web-specific session handling from downstream clients.
+- Support both regular responses and streaming-style workflows.
+- Preserve a predictable request/response shape.
+- Add a proxy-side API key so the gateway is not unintentionally public.
+- Keep unsupported or upstream-specific features from breaking clients unnecessarily.
+
+---
+
+## Architecture
+
+At a high level, the gateway works as a translation layer:
+
+```text
+Client
+  -> sends OpenAI-shaped request
+  -> gateway validates and normalizes payload
+  -> gateway resolves auth/session state
+  -> gateway builds upstream ChatGPT Web request
+  -> upstream returns conversation data or stream events
+  -> gateway converts output into client-friendly format
+```
+
+This separation is the key design decision. The client stays boring and predictable, while the gateway absorbs the differences between APIs.
+
+```mermaid
+sequenceDiagram
+    participant Client as OpenAI-style Client
+    participant Gateway as chatgpt-to-api Gateway
+    participant Auth as Session/Auth Layer
+    participant Upstream as ChatGPT Web
+
+    Client->>Gateway: POST /v1/chat/completions
+    Gateway->>Gateway: Validate and normalize payload
+    Gateway->>Auth: Resolve browser session token
+    Auth-->>Gateway: Usable upstream auth state
+    Gateway->>Upstream: Send translated conversation request
+    Upstream-->>Gateway: Stream or JSON conversation response
+    Gateway-->>Client: OpenAI-compatible response shape
+```
+
+---
+
+## Key Features
+
+- **OpenAI-Compatible Surface**: Accepts familiar chat request structures so existing clients require minimal changes.
+- **Message Translation**: Converts stateless `messages` arrays into the upstream conversation format expected by ChatGPT Web.
+- **Session Handling**: Manages browser-session style authentication separately from client authorization.
+- **Streaming Support**: Handles response streaming so clients can receive incremental model output.
+- **Proxy API Key Boundary**: Adds a local authorization layer to prevent accidental public exposure.
+- **Compatibility-First Design**: Accepts common client fields where possible even when upstream behavior differs.
+
+---
+
+## Authentication Model
+
+One of the most important parts of the project is separating two different trust boundaries:
+
+- The upstream session proves the gateway can talk to ChatGPT Web.
+- The proxy API key proves a client is allowed to use this gateway.
+
+Keeping those concerns separate makes the system easier to reason about. A user can protect the local or hosted proxy without exposing the upstream session directly to every client.
+
+---
+
+## Request Translation
+
+OpenAI-style clients typically send a request made of roles and messages. ChatGPT Web expects a different conversation-oriented payload. The gateway is responsible for turning one mental model into the other.
+
+That includes:
+
+- Preserving user, assistant, and system message intent.
+- Building upstream-compatible conversation payloads.
+- Handling model identifiers.
+- Accepting compatibility fields without breaking the request.
+- Returning errors in a client-understandable way.
+
+This is where much of the hidden complexity lives. Good compatibility work is successful when the caller does not need to think about the translation layer at all.
+
+---
+
+## Streaming
+
+Streaming is more complex than a normal JSON response because the gateway has to translate events as they arrive. The project needs to preserve the feeling of a live model response while adapting upstream events into a downstream format that API clients can consume.
+
+This required attention to:
+
+- Response headers.
+- Incremental event parsing.
+- Client disconnect behavior.
+- Finalization events.
+- Error handling during partial responses.
+
+---
+
+## Technical Stack
+
+- **Runtime**: Node.js.
+- **API Layer**: Express-style HTTP server.
+- **Protocol Work**: Request normalization, response translation, streaming, and auth/session handling.
+- **Compatibility Layer**: OpenAI-style client request support for existing developer tooling.
+
+---
+
+## Challenges
+
+The main challenge was building something resilient around a system that was not originally designed to be used this way. That means the gateway has to be defensive:
+
+- Upstream request requirements can be strict.
+- Session state can expire.
+- Streaming formats can be awkward to parse.
+- Clients may send parameters that do not map cleanly upstream.
+- Errors need to be translated into useful client feedback.
+
+This made the project a good exercise in practical backend robustness.
+
+---
+
+## What I Learned
+
+This project improved my understanding of API compatibility layers. A good compatibility gateway is not only a proxy. It is a contract translator.
+
+I learned to think more carefully about:
+
+- Trust boundaries.
+- Developer experience.
+- Streaming protocol behavior.
+- Error normalization.
+- How much compatibility to support without overpromising.
+
+---
+
+## What It Shows
+
+chatgpt-to-api highlights API design, reverse-engineering discipline, backend reliability, streaming responses, and pragmatic developer tooling. It connects directly to real workflows because it helps existing tools use a familiar API surface.

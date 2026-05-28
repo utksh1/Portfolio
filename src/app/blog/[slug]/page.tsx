@@ -54,9 +54,9 @@ export default async function Blog({
 
   return (
     <Row fillWidth>
-      <Row maxWidth={12} hide="m"/>
+      <Row className="m-flex-hide" maxWidth={12}/>
       <Row fillWidth horizontal="center">
-        <Column as="section" maxWidth="xs" gap="l">
+        <Column as="section" maxWidth="m" gap="l">
           <Schema
             as="blogPosting"
             baseURL={baseURL}
@@ -88,7 +88,7 @@ export default async function Blog({
           <ScrollToHash />
         </Column>
     </Row>
-    <Column maxWidth={12} paddingLeft="40" fitHeight position="sticky" top="80" gap="16" hide="m">
+    <Column className="m-flex-hide" maxWidth={12} paddingLeft="40" fitHeight position="sticky" top="80" gap="16">
       <Row
         gap="12"
         paddingLeft="2"

@@ -1,0 +1,149 @@
+---
+title: "URL Shortner: lightweight link shortening web app."
+publishedAt: "2026-05-16"
+summary: "A JavaScript web application for creating compact shareable links, with a live deployed interface and a practical focus on routing, persistence, and simple user-facing utility."
+images: []
+team:
+  - name: "Utkarsh Singh"
+    role: "Full-Stack Developer"
+    avatar: "/images/photo.jpeg"
+    linkedIn: "https://www.linkedin.com/in/utksh"
+link: "https://github.com/utksh1/Url-Shortner"
+liveLink: "https://url-shortner-nine-tawny.vercel.app"
+---
+
+## Overview
+
+URL Shortner is a focused web utility for creating compact links from long URLs. It is intentionally small in scope, but it demonstrates a complete product flow: user input, validation, short-code generation, storage or lookup behavior, redirection, and public deployment.
+
+This project is useful in the portfolio because it shows practical web-development fundamentals. Not every project needs to be a large distributed system. A strong utility app proves the ability to ship something simple, understandable, and usable end to end.
+
+The project also has a live deployment, which makes it easier for visitors to test the work instead of only reading about it.
+
+---
+
+## Problem
+
+Long URLs are hard to share, especially in messages, documents, and social contexts. A URL shortener solves this by mapping a long destination URL to a compact route.
+
+Even though the product sounds simple, it includes several important engineering concerns:
+
+- Validating user-submitted URLs.
+- Generating unique short slugs.
+- Storing the mapping between slug and destination.
+- Redirecting visitors reliably.
+- Handling invalid or missing slugs.
+- Keeping the user flow fast and clear.
+
+---
+
+## User Flow
+
+The core flow is straightforward:
+
+```text
+User enters a long URL
+  -> app validates the input
+  -> app generates a short slug
+  -> short URL is displayed
+  -> visitor opens short URL
+  -> app resolves slug
+  -> visitor is redirected to original URL
+```
+
+The simplicity of this flow is the point. The app should not make users think too much. It should accept a URL, return a short link, and make the result easy to copy or share.
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant App as URL Shortner App
+    participant Store as Link Mapping Store
+    participant Visitor
+
+    User->>App: Submit long URL
+    App->>App: Validate URL and generate slug
+    App->>Store: Save slug to destination mapping
+    App-->>User: Return short URL
+    Visitor->>App: Open short URL
+    App->>Store: Look up destination
+    Store-->>App: Original URL
+    App-->>Visitor: Redirect to destination
+```
+
+---
+
+## Key Features
+
+- **Short Link Creation**: Accepts a long URL and generates a compact version for sharing.
+- **Redirect Flow**: Resolves shortened paths back to the original destination.
+- **Live Deployment**: Published on Vercel for direct testing.
+- **Simple Product UX**: Keeps the core action fast and easy to understand.
+- **JavaScript Web Stack**: Demonstrates core web app routing and frontend logic.
+- **Public Project Link**: Includes both GitHub source and deployed app access.
+
+---
+
+## Technical Stack
+
+- **Language**: JavaScript.
+- **Deployment**: Vercel.
+- **Core Concepts**: URL validation, slug generation, redirect routing, form handling, and deployment configuration.
+- **Product Type**: Small utility application.
+
+---
+
+## Engineering Decisions
+
+The biggest decision in a URL shortener is how much complexity to introduce. For a portfolio project, the goal is not to overbuild. It is better to create a clean, reliable version of the core workflow than to bury the app under unnecessary features.
+
+The project focuses on:
+
+- A clear input experience.
+- Predictable short-link generation.
+- A redirect route that behaves consistently.
+- A deployed URL that visitors can test.
+- A code structure that can be expanded later.
+
+---
+
+## Edge Cases
+
+Even small utilities need edge-case thinking. A URL shortener should consider:
+
+- Empty input.
+- Invalid URL formats.
+- Duplicate or colliding short slugs.
+- Missing slug records.
+- Redirect safety.
+- User feedback when something fails.
+
+These details separate a quick demo from a more thoughtful web app.
+
+---
+
+## Possible Improvements
+
+Future versions could add:
+
+- Click analytics.
+- Custom slugs.
+- Expiration dates.
+- User accounts and link history.
+- QR code generation.
+- Abuse prevention and rate limiting.
+
+Those features would turn the app from a simple utility into a more complete link-management product.
+
+---
+
+## What I Learned
+
+URL Shortner reinforced the value of shipping small, complete projects. It is easy to underestimate simple tools, but they still require clean routing, validation, deployment, and user feedback.
+
+The project also helped practice the discipline of keeping scope tight. A useful utility should do one thing well before adding advanced features.
+
+---
+
+## What It Shows
+
+This project adds a clean deployed utility app to the portfolio. It shows that I can build and ship practical web products, not only large case-study systems.

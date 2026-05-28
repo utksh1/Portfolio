@@ -27,3 +27,31 @@
         align-self: center;
     }
 }
+
+.roleLink {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: opacity var(--transition-micro-medium);
+
+    &:hover {
+        opacity: 0.85;
+    }
+}
+
+.skillText {
+    transition: color var(--transition-micro-medium) !important;
+
+    &:hover {
+        color: var(--brand-solid) !important;
+    }
+}
+
+.skillPill {
+    transition: transform var(--transition-micro-medium) ease, box-shadow var(--transition-micro-medium) ease !important;
+
+    &:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25) !important;
+    }
+}

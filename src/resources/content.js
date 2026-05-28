@@ -1,21 +1,20 @@
-import { Logo } from "@once-ui-system/core";
-
 const person = {
   firstName: "Utkarsh",
   lastName: "Singh",
   get name() {
     return `${this.firstName} ${this.lastName}`;
   },
-  role: "Web Developer",
-  avatar: "/images/avatar.jpg",
+  role: "Web Developer & Cybersecurity Enthusiast",
+  avatar: "/images/photo.jpeg",
   email: "Utkarshsingh60101@gmail.com",
-  location: "Asia/Kolkata", 
+  location: "Delhi, India",
+  timeZone: "Asia/Kolkata",
   languages: ["English", "Hindi"],
 };
 
 const newsletter = {
   display: true,
-  title: <>Subscribe to {person.firstName}'s Newsletter</>,
+  title: <>Subscribe to {person.firstName}&apos;s Newsletter</>,
   description: (
     <>
       I occasionally write about design, technology, and share thoughts on the intersection of
@@ -36,8 +35,8 @@ const social = [
     link: "https://www.linkedin.com/in/utksh",
   },
   {
-    name: "Threads",
-    icon: "threads",
+    name: "Instagram",
+    icon: "instagram",
     link: "https://www.instagram.com/utkarsh.0_0/",
   },
   {
@@ -53,16 +52,16 @@ const home = {
   label: "Home",
   title: `${person.name}'s Portfolio`,
   description: `Portfolio website showcasing my work as a ${person.role}`,
-  headline: <>Building bridges between server and code</>,
+  headline: <>Engineering secure architectures, intelligent systems, and performant web experiences.</>,
   featured: {
     display: true,
-    title: <>Recent project: <strong className="ml-4">Github Automation</strong></>,
-    href: "/work/automate-design-handovers-with-a-figma-to-code-pipeline",
+    title: <>Recent project: <strong className="ml-4">SecuScan</strong></>,
+    href: "/work/secuscan",
   },
   subline: (
     <>
-      I'm Utkarsh, a Web Developer Freelancer, where I design seamless and intuitive
-      <br /> user experiences that elevate web performance and usability.
+      I&apos;m a B.Tech CSE & AI student focused on building high-performance web apps,
+      <br /> privacy-focused products, and secure scanning systems using JavaScript, Python, and Rust.
     </>
   ),
 };
@@ -88,10 +87,8 @@ const about = {
     title: "Introduction",
     description: (
       <>
-        I’m Utkarsh, a web developer from India with a passion for creating sleek, responsive
-        websites. I love solving problems through code and building digital experiences that are
-        both practical and visually engaging.
-        </>
+        I&apos;m Utkarsh, a web developer and cybersecurity enthusiast passionate about building responsive interfaces, full-stack applications, and security-focused tools.
+      </>
     ),
   },
   work: {
@@ -99,49 +96,66 @@ const about = {
     title: "Work Experience",
     experiences: [
       {
-        company: "Minexnodes Hosting",
-        timeframe: "Dec 2024 - Sept 2025",
-        role: "Server Manager",
-        achievements: [
-          <>
-            Managing server environments, monitoring services, and supporting backend operations for
-            smooth uptime and performance across deployed systems.
-          </>,
-          <>
-            Also contributed to improving deployment workflows and troubleshooting server-side
-            issues, ensuring smoother operations and faster response times during service 
-            interruptions.
-          </>,
-        ],
-        images: [
-        
+        company: "GirlScript Summer of Code",
+        logo: {
+          src: "https://media.licdn.com/dms/image/v2/C510BAQGSObrO0QPlMQ/company-logo_100_100/company-logo_100_100/0/1630597186826/girlscriptsoc_logo?e=1781740800&v=beta&t=qMigm71EUgBoPp5Y46AsrpZYZTkrZHxH0AQXV2JoiaI",
+        },
+        roles: [
           {
-            src: "/images/projects/project-01/c1.jpg",
-            alt: "Minexnodes",
-            width: 16,
-            height: 9,
+            title: "Project Admin",
+            link: "https://gssoc.girlscript.org/profile/edc3ab97-c954-4f3d-933f-0400737b5979",
+            timeframe: "May 2026 - Present",
+            description: (
+              <>
+                Managed the overall repository architecture and coordinated feature roadmaps while overseeing pull requests to maintain high code standards. Mentored new open-source contributors, guiding their code structure and ensuring all contributions strictly adhered to secure software development practices.
+              </>
+            ),
+          },
+          {
+            title: "Open Source Contributor",
+            link: "https://www.linkedin.com/in/utksh/details/experience/",
+            timeframe: "Aug 2025 - Oct 2025",
+            description: (
+              <>
+                Contributed feature enhancements and bug fixes across multiple open-source repositories through structured pull requests. Focused on improving code quality and maintainability by conducting code reviews, documenting technical behavior, and aligning all contributions with strict project conventions.
+              </>
+            ),
           },
         ],
       },
       {
-        company: "Cobble.gg",
-        timeframe: "June 2024 - Oct 2024",
-        role: "Junior Developer",
-        achievements: [
-          <>
-            Developed a website for Cobble.gg, a Minecraft server hosting platform, improving
-            the user experience and increasing engagement.
-          </>,
-          <>
-            Help them to grow and attract more consumers with professional approach and increase visibilty
-          </>,
-        ],
-        images: [
+        company: "Society of Cyber Security",
+        logo: {
+          src: "https://media.licdn.com/dms/image/v2/D4E0BAQGxAEN3KxiBKw/company-logo_100_100/company-logo_100_100/0/1737237004398?e=1781740800&v=beta&t=3Z4_94wund8K0vdPjadUxmNZJlIW_h-03zXZIPv4_GM",
+        },
+        roles: [
           {
-            src: "/images/projects/project-01/c2.jpg",
-            alt: "Cobble.gg",
-            width:16,
-            height:9,
+            title: "Core Member",
+            link: "https://www.linkedin.com/in/utksh/details/experience/",
+            timeframe: "Sep 2025 - Present",
+            description: (
+              <>
+                Built and tested security tools while actively participating in Capture The Flag (CTF) competitions across multiple platforms. Focused on solving complex challenges in cryptography, digital forensics, and web exploitation, which strengthened practical security auditing and advanced debugging skills.
+              </>
+            ),
+          },
+        ],
+      },
+      {
+        company: "Amdox Technologies",
+        logo: {
+          src: "https://media.licdn.com/dms/image/v2/D560BAQHkxNcin7pyug/company-logo_100_100/B56ZYEaCS_HEAU-/0/1743830657663/amdox_tech_logo?e=1781740800&v=beta&t=6o29xwi8zm_4pLrZuRK3XyLASwWjc9CuPiW4otWbAEQ",
+        },
+        roles: [
+          {
+            title: "Web Developer Intern",
+            link: "https://www.linkedin.com/in/utksh/details/experience/",
+            timeframe: "Nov 2025 - Jan 2026",
+            description: (
+              <>
+                Built and optimized responsive digital interfaces using modern JavaScript libraries like React, focusing on improving component reusability and front-end performance. Collaborated closely with the team to establish maintainable UI workflows, ensuring cleaner code structure, smoother animations, and highly reliable user-facing behavior.
+              </>
+            ),
           },
         ],
       },
@@ -153,50 +167,43 @@ const about = {
     institutions: [
       {
         name: "Rishihood University",
-        description: <>Studying Computer Science(AI & ML).</>,
-        Duration: <>2025-2029</>
-      },
-      {
-        name: "Newton School of Technology",
-        description: <>Upscaling in Web Develoment, Data Stucture and Algorithms </>,
+        logo: {
+          src: "/images/rishihood.jpeg",
+        },
+        duration: "2025 - 2029",
+        degree: "B.Tech in Computer Science & Artificial Intelligence",
+        gpa: "SGPA: 7.33",
+        description: (
+          <>
+            Focusing on core computer science foundations, algorithms, machine learning, and artificial intelligence principles. Active participant in coding events, technology hackathons, and academic initiatives.
+          </>
+        ),
       },
     ],
   },
   technical: {
     display: true, 
-    title: "Technical skills",
+    title: "Technical Skills",
     skills: [
       {
-        title: "Full-Stack Web Development--",
-        description: <>Built full-stack web apps like CampusConnect and Hostel System
-        using PHP, MariaDB, and role-based auth.</>,
-        images: [
-          {
-            src: "/images/projects/project-01/fs.jpg",
-            alt: "Project image",
-            width: 16,
-            height: 9,
-          },
-
-          {
-            src: "/images/projects/project-01/fs2.jpg",
-            alt: "Project image",
-            width: 16,
-            height: 9,
-          },
-        ],
+        title: "Languages",
+        tags: ["JavaScript (ES6+)", "Python", "C", "Rust"],
       },
       {
-        title: "Data Structures and Algorithm",
-        description: <>Proficient in designing efficient algorithms and implementing robust data structures to solve complex computational problems. Experienced with real-world applications and optimization techniques.</>,
-        images: [
-          {
-            src: "/images/projects/project-01/cover-04.jpg",
-            alt: "Project image",
-            width: 16,
-            height: 9,
-          },
-        ],
+        title: "Frameworks",
+        tags: ["ReactJS", "Redux", "Node.js", "ExpressJS", "FastAPI", "Next.js", "Flask", "Fastify", "LangChain", "Pandas", "PyTorch"],
+      },
+      {
+        title: "Databases",
+        tags: ["PostgreSQL", "MySQL", "SQLite3", "MongoDB", "MariaDB", "Vector DB", "Elastic DB"],
+      },
+      {
+        title: "Tools",
+        tags: ["Docker", "Git", "OpenSearch", "Redis", "Burp Suite", "Wireshark", "Nmap", "Shell"],
+      },
+      {
+        title: "Concepts",
+        tags: ["Computer Networking", "System Design", "VAPT", "RESTful APIs", "Distributed Systems", "Web Application Security", "Cloud Security"],
       },
     ],
   },

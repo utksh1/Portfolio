@@ -1,0 +1,204 @@
+---
+title: "Building a Master-Client Cluster With Multiple Render Instances"
+summary: "How Nebula Cluster uses a central control plane and many Render-style workers to create a lightweight Kubernetes-like job system."
+publishedAt: "2026-05-29"
+tag: "Distributed Systems"
+---
+
+[Nebula Cluster](https://github.com/utksh1/nebula-cluster-app) started from a practical question: what if I could run many small worker instances across Render, Railway, Oracle VPS, Docker hosts, or local machines, then control them from one master application?
+
+The result is a lightweight orchestration platform. It is not trying to replace Kubernetes. Instead, it borrows the useful mental model: one control plane, many worker nodes, health checks, scheduling, logs, retries, and a dashboard that shows what the cluster is doing.
+
+In simple terms:
+
+```text
+Master Control Plane
+  -> knows workers
+  -> receives jobs
+  -> schedules work
+  -> tracks leases, logs, metrics, and results
+
+Worker Instances
+  -> register with master
+  -> send heartbeats
+  -> pull jobs
+  -> execute jobs
+  -> report progress and completion
+```
+
+That gives us a "master-client" cluster where multiple Render background services can behave like a distributed worker pool.
+
+## Why Multiple Render Instances
+
+Render is useful because spinning up background workers is straightforward. But a single instance is still just one process. If we want parallel job execution, redundancy, provider separation, and better uptime behavior, we need more than one worker.
+
+Nebula treats each Render instance as a worker node. Every node has its own identity, provider metadata, capacity, capabilities, heartbeat, and runtime status.
+
+That means the master can answer questions like:
+
+- Which workers are online?
+- Which provider account does this worker belong to?
+- How many jobs can it run at once?
+- Is it busy, draining, disabled, or offline?
+- What type of jobs can it execute?
+- Which job lease is currently assigned to it?
+
+Once workers become first-class records, the platform can schedule jobs instead of manually calling random services.
+
+## The Control Plane
+
+The control plane is the brain of the system. In the current architecture, it is built around a Node.js and Express API with Prisma, PostgreSQL, Redis, BullMQ, and Socket.IO.
+
+Each part has a specific role:
+
+```text
+Express API     -> REST endpoints for dashboard, CLI, workers, and jobs
+PostgreSQL      -> durable state for users, projects, workers, jobs, logs
+Prisma          -> typed database access and migrations
+Redis + BullMQ  -> queues, priorities, retries, delayed work
+Socket.IO       -> realtime dashboard events and worker control messages
+React dashboard -> cluster visibility and operations UI
+```
+
+The control plane owns the source of truth. Workers do not decide global scheduling. They report their state, ask for work, execute assigned jobs, and send results back.
+
+## Worker Registration
+
+When a worker starts, it registers with the master:
+
+```text
+Worker starts
+  -> loads environment variables
+  -> authenticates with a worker token or login flow
+  -> posts registration data
+  -> receives an internal worker ID
+  -> opens realtime connection
+  -> starts heartbeat and polling loops
+```
+
+A worker registration includes fields such as provider, region, CPU count, memory, max concurrent jobs, capabilities, tags, trust level, worker version, and protocol version.
+
+For a Render worker, the environment might look like:
+
+```bash
+NEBULA_MASTER_URL=https://api.example.com
+NEBULA_WORKER_TOKEN=worker_token_here
+NEBULA_PROVIDER=render
+NEBULA_PROVIDER_ACCOUNT_ID=acct_1
+NEBULA_WORKER_NAME=render-worker-1
+NEBULA_MAX_CONCURRENT_JOBS=2
+```
+
+This is the point where a normal hosted background process becomes part of the cluster.
+
+## Heartbeats and Health
+
+Registration only proves that a worker existed once. Heartbeats prove that it is still alive.
+
+Each worker periodically sends memory usage, CPU usage, active job count, uptime, and status. The master stores this data and emits realtime updates to the dashboard.
+
+If a worker stops sending heartbeats, the master marks it offline. Any active leases attached to that worker can expire, and unfinished jobs can be made eligible for retry.
+
+That is one of the core Kubernetes-like ideas in Nebula: the desired job state lives in the control plane, and workers are disposable executors. If one executor disappears, the system can recover instead of losing the job forever.
+
+## Job Scheduling
+
+Jobs enter the system through the API. The master stores the job in PostgreSQL and pushes scheduling metadata into BullMQ.
+
+The MVP scheduling path is intentionally simple:
+
+```text
+1. Find online workers.
+2. Exclude disabled, draining, offline, or errored workers.
+3. Match project, pool, provider, region, and capabilities.
+4. Respect max concurrent job limits.
+5. Pick a low-load worker.
+6. Create a lease.
+7. Let the worker execute and report back.
+```
+
+This is not a full autoscaling scheduler yet, but it gives the platform the right foundation. Scheduling decisions are centralized, observable, and based on worker state rather than hardcoded URLs.
+
+## Pull First, Push Later
+
+Nebula supports the idea of realtime worker events through Socket.IO, but the MVP worker execution model starts with polling:
+
+```text
+GET /api/v1/workers/:workerId/tasks/next
+```
+
+That choice is deliberate. Pull-based workers are easier to run across Render, Railway, VPS machines, and local development because workers only need outbound access to the master. They can survive reconnects, provider restarts, and temporary network issues more gracefully.
+
+Socket.IO still matters for live controls and dashboard updates. For example, the master can emit cancellation events, and the dashboard can receive job progress, logs, and worker status changes in real time.
+
+## Leases Make Jobs Safer
+
+The lease system is what keeps job assignment from becoming too fragile.
+
+When a worker receives a job, the master attaches a lease token and expiry time. While the job runs, the worker renews the lease periodically:
+
+```text
+POST /api/v1/jobs/:jobId/lease/renew
+```
+
+If the worker completes the job, it sends the result with the lease token. If it fails, it reports the failure. If it disappears, the lease eventually expires and the master can mark the job as stale.
+
+That gives Nebula a clean way to handle the messy reality of distributed systems: processes restart, networks drop, providers sleep services, and jobs sometimes outlive the machine that started them.
+
+## Logs, Progress, and Results
+
+A cluster is only useful if we can see what it is doing.
+
+Workers send structured logs and progress updates while executing jobs:
+
+```text
+POST /api/v1/jobs/:jobId/logs
+POST /api/v1/jobs/:jobId/progress
+POST /api/v1/jobs/:jobId/result
+```
+
+The current worker supports simple `sleep` and `http` job types. That sounds small, but it proves the full execution lifecycle:
+
+```text
+queued
+  -> assigned
+  -> running
+  -> progress/log events
+  -> completed or failed
+```
+
+Once that lifecycle is reliable, new job executors can be added without redesigning the whole platform.
+
+## The Kubernetes-Like Part
+
+Nebula is Kubernetes-like in pattern, not in complexity.
+
+The similar ideas are:
+
+- A central master tracks cluster state.
+- Worker nodes register and send health signals.
+- Jobs are scheduled onto eligible workers.
+- Workers report logs, progress, and final state.
+- Failed or vanished workers do not own the source of truth.
+- Realtime events make the system observable.
+
+The difference is scope. Nebula is focused on application-level jobs, external provider workers, and a simple operational dashboard. It does not need pods, service meshes, container networking, or a huge control surface to be useful.
+
+That makes it easier to deploy for small automation workloads, scraping tasks, HTTP jobs, testing jobs, AI workflows, and background processing across cheap hosted instances.
+
+## Where This Goes Next
+
+The current version sets up the foundation: API, dashboard, worker protocol, job lifecycle, BullMQ queues, database state, heartbeats, leases, and realtime events.
+
+The next natural steps are:
+
+- Better scheduling rules based on provider, region, trust level, and capability.
+- Stronger worker tokens and rotation.
+- More job executors, including shell, browser automation, and Docker-backed tasks.
+- Artifact storage for files, screenshots, reports, and output bundles.
+- Separate scheduler and websocket services once the master grows.
+- Managed Postgres and Redis for production reliability.
+
+The bigger idea is that a cluster does not have to start as a huge infrastructure project. You can begin with one master and a few Render workers, then let the architecture grow as real workloads demand it.
+
+That is the heart of [Nebula Cluster](https://github.com/utksh1/nebula-cluster-app): a small, understandable control plane that turns many ordinary hosted instances into one coordinated worker system.

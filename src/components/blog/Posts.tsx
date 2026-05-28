@@ -1,6 +1,6 @@
 import { getPosts } from '@/utils/utils';
-import { Grid } from '@once-ui-system/core';
-import Post from './Post';
+import { BlogPostCard } from '@/components/ui/card-18';
+import { formatDate } from '@/utils/formatDate';
 
 interface PostsProps {
     range?: [number] | [number, number];
@@ -8,6 +8,11 @@ interface PostsProps {
     thumbnail?: boolean;
     direction?: 'row' | 'column';
 }
+
+const fallbackImages: Record<string, string> = {
+    'chatgpt-to-api': 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1800&q=80',
+    'nebula-cluster-render-workers': 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1800&q=80',
+};
 
 export function Posts({
     range,
@@ -31,18 +36,28 @@ export function Posts({
     return (
         <>
             {displayedBlogs.length > 0 && (
-                <Grid
-                    columns={columns} mobileColumns="1"
-                    fillWidth marginBottom="40" gap="12">
+                <div
+                    className={
+                        columns === '3'
+                            ? 'mb-10 grid w-full grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3'
+                            : columns === '2'
+                              ? 'mb-10 grid w-full grid-cols-1 gap-8 md:grid-cols-2'
+                              : 'mb-10 grid w-full grid-cols-1 gap-8'
+                    }
+                >
                     {displayedBlogs.map((post) => (
-                        <Post
+                        <BlogPostCard
                             key={post.slug}
-                            post={post}
-                            thumbnail={thumbnail}
-                            direction={direction}
+                            variant={thumbnail || direction === 'column' ? 'featured' : 'default'}
+                            tag={post.metadata.tag || 'Writing'}
+                            date={`ON ${formatDate(post.metadata.publishedAt, false).toUpperCase()}`}
+                            title={post.metadata.title}
+                            description={post.metadata.summary}
+                            href={`/blog/${post.slug}`}
+                            imageUrl={post.metadata.image || fallbackImages[post.slug]}
                         />
                     ))}
-                </Grid>
+                </div>
             )}
         </>
     );

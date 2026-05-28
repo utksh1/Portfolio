@@ -1,0 +1,150 @@
+---
+title: "How We Converted ChatGPT Into an API"
+summary: "A practical look at building an unofficial OpenAI-compatible gateway on top of ChatGPT Web, from browser-session auth to streaming responses."
+publishedAt: "2026-05-29"
+tag: "API Engineering"
+---
+
+The idea behind [chatgpt-to-api](https://github.com/utksh1/chatgpt-to-api) was simple: take the ChatGPT web experience and make it usable from tools that expect the OpenAI API shape.
+
+That means an editor, script, dashboard, or automation client should be able to call a familiar endpoint like `/v1/chat/completions`, send a normal `messages` array, and receive either JSON or streaming Server-Sent Events in the same style as the OpenAI SDK expects.
+
+The hard part is that ChatGPT Web is not the OpenAI API. It has its own browser session, access-token refresh flow, conversation payload shape, anti-abuse checks, and streaming format. So the project became a translation layer: one side speaks OpenAI-compatible client language, and the other side speaks ChatGPT Web.
+
+## The Gateway Shape
+
+At the center is a Node.js and Express server. It exposes a familiar API surface:
+
+```text
+GET  /ping
+GET  /v1/models
+POST /v1/chat/completions
+POST /v1/responses
+```
+
+The client sees this as a standard API base URL. Internally, the server does the work needed to talk to ChatGPT Web:
+
+```text
+Client
+  -> OpenAI-style request
+  -> Express gateway
+  -> ChatGPT Web auth/session refresh
+  -> Sentinel proof-of-work
+  -> ChatGPT backend conversation endpoint
+  -> OpenAI-style JSON or SSE response
+```
+
+This separation is the most important design decision in the project. The gateway absorbs all the weirdness of the web backend so the caller can stay boring and predictable.
+
+## Authentication
+
+The first problem was authentication. ChatGPT Web relies on a browser session, not a normal API key. The gateway accepts a long-lived ChatGPT session cookie, then uses it to refresh a shorter-lived access token when needed.
+
+That token cache keeps the hot path fast. The server does not need to fetch a fresh token for every request; it can reuse a valid access token until it expires, then refresh it behind the scenes.
+
+The proxy also supports a `PROXY_API_KEY`, so the local or hosted gateway is not accidentally open to anyone who can reach the URL. In practice, there are two separate trust boundaries:
+
+- The ChatGPT session token proves the gateway can talk to ChatGPT Web.
+- The proxy API key proves a client is allowed to use this gateway.
+
+Keeping those concerns separate made the system easier to reason about.
+
+## Translating Messages
+
+OpenAI-compatible clients usually send a request that looks like this:
+
+```json
+{
+  "model": "gpt-5-5",
+  "messages": [
+    { "role": "system", "content": "You are a helpful assistant." },
+    { "role": "user", "content": "Explain reverse proxies." }
+  ],
+  "stream": true
+}
+```
+
+ChatGPT Web expects a different conversation payload. The gateway converts the stateless `messages` array into the format required by the upstream conversation endpoint, generates IDs, forwards the selected model slug, and preserves enough context for a single request-response turn.
+
+Some fields are accepted mainly for compatibility. For example, sampling controls such as `temperature`, `top_p`, and `max_tokens` may exist in the client request, but ChatGPT Web does not expose them in the same way. The proxy accepts them so existing clients do not break, while keeping the upstream payload focused on what ChatGPT Web actually understands.
+
+## Sentinel Proof-of-Work
+
+One of the more interesting parts was handling ChatGPT Web's Sentinel proof-of-work challenge.
+
+Before a conversation request is accepted, the gateway can be required to call a Sentinel requirements endpoint, receive a challenge, solve a SHA3-512 nonce puzzle locally, and send the resulting proof token with the conversation request.
+
+In simplified form:
+
+```text
+1. Ask ChatGPT Web for chat requirements.
+2. Receive a seed and difficulty.
+3. Iterate nonce values locally.
+4. Hash the proof payload until it satisfies the challenge.
+5. Send the proof through the Openai-Sentinel-Proof-Token header.
+```
+
+This happens inside the server, not in the calling client. That keeps the external API clean: the client sends a normal chat request, and the gateway handles the proof step automatically.
+
+## Streaming Conversion
+
+Streaming was the piece that made the gateway feel real.
+
+ChatGPT Web streams data in its own SSE shape. OpenAI-compatible clients expect chunks that look like `chat.completion.chunk` objects, where the assistant text arrives through `choices[0].delta.content`.
+
+So the server reads the upstream event stream, extracts the newly generated text, and re-emits it as OpenAI-style SSE:
+
+```text
+ChatGPT Web SSE
+  -> parse accumulated assistant content
+  -> compute the new delta
+  -> emit OpenAI-style chunk
+  -> finish with data: [DONE]
+```
+
+That delta extraction is what lets clients like IDE extensions, local chat UIs, or SDK-based scripts render output token by token instead of waiting for the full answer.
+
+## Model Routing Reality
+
+The gateway exposes `/v1/models`, but the model list is a compatibility layer rather than a guarantee from the upstream service.
+
+ChatGPT Web can ignore, remap, or reject a model slug depending on account access and internal routing. Because of that, the project treats model selection carefully:
+
+- The client can request a model slug.
+- The gateway forwards that slug where possible.
+- The upstream may still route differently.
+- The response attempts to surface an upstream model hint if one appears in the SSE metadata.
+
+The key lesson: a proxy can expose an API contract, but it cannot magically create an upstream capability that the account does not have.
+
+## Responses API Bridge
+
+Later, the gateway also added a `/v1/responses` bridge for newer clients that prefer the Responses API shape. It translates `instructions`, `input`, and simple function-tool definitions into the internal chat completion path.
+
+This is not the same as native hosted tools. It is a compatibility bridge. For simple function-call flows, the gateway can prompt-engineer a tool-call protocol and parse the result back into a client-friendly shape. For complex tool schemas, native API support is still more reliable.
+
+That tradeoff is important. The goal of this project is practical compatibility, not pretending that reverse-engineered web behavior is identical to the official API.
+
+## Dashboard and Operations
+
+The repo also includes the start of a management layer: API keys, logs, settings, audit routes, Supabase storage, rate-limit helpers, and a dashboard built with Vite and React.
+
+That turns the project from a single local proxy into something closer to a controlled gateway:
+
+- API keys can protect usage.
+- Logs make requests debuggable.
+- Settings allow runtime control.
+- Auditing helps track what happened.
+- Metering hooks make limits possible.
+
+Those pieces matter because once a gateway is useful, the next problem is not "can it send one request?" The next problem is "can I run it without losing control?"
+
+## What I Learned
+
+This project was less about copying an API and more about designing a compatibility boundary.
+
+On one side, clients want stable OpenAI-style behavior. On the other side, ChatGPT Web is built for browsers and can change its internal protocol. The gateway sits between them and turns that mismatch into a usable interface.
+
+The most valuable engineering pattern was to keep the public surface boring: normal endpoints, normal bearer auth, normal JSON, normal SSE. All the unusual parts - session cookies, access-token refresh, Sentinel proof-of-work, upstream event parsing, model slug uncertainty - stay hidden inside the gateway.
+
+That is what makes [chatgpt-to-api](https://github.com/utksh1/chatgpt-to-api) useful: it does not remove the complexity, but it puts the complexity in one place.
