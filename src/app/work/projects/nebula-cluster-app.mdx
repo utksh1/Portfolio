@@ -13,19 +13,15 @@ link: "https://github.com/utksh1/nebula-cluster-app"
 
 ## Overview
 
-Nebula Cluster is a distributed worker orchestration platform built around a master-client model. The goal is to coordinate many independent worker instances from a central control plane, turning small cloud services or local processes into a lightweight compute cluster.
+Nebula Cluster is a **distributed worker orchestration platform** built around a master-client model. The goal is to coordinate many independent worker instances from a central control plane, turning small cloud services or local processes into a lightweight compute cluster.
 
-The project is inspired by the useful parts of orchestration systems: registration, health checks, scheduling, logs, job state, retries, and observability. It is not meant to replace Kubernetes. Instead, it explores a simpler mental model for coordinating background work across multiple machines or hosted services.
+The project is inspired by the useful parts of orchestration systems — registration, health checks, scheduling, logs, job state, retries, and observability. It's not meant to replace Kubernetes; instead, it explores a **simpler mental model** for coordinating background work across multiple machines or hosted services.
 
-This project is one of the strongest systems-oriented pieces in my portfolio because it demonstrates architecture beyond a single web server.
+This is one of the strongest systems-oriented pieces in my portfolio because it demonstrates architecture beyond a single web server.
 
----
+## The Problem
 
-## Problem
-
-Running one background worker is simple. Running many workers across different environments is harder.
-
-Without a central control plane, it becomes difficult to answer basic operational questions:
+Running one background worker is simple. Running many workers across different environments is harder. Without a central control plane, it becomes difficult to answer basic operational questions:
 
 - Which workers are online?
 - Which worker is currently executing a job?
@@ -34,31 +30,11 @@ Without a central control plane, it becomes difficult to answer basic operationa
 - How many jobs can a worker safely run at once?
 - What happened during a job execution?
 
-Nebula Cluster exists to make that distributed state visible and manageable.
+Nebula Cluster exists to make that distributed state **visible and manageable**.
 
----
+## System Architecture
 
-## System Model
-
-The project uses a master-client structure:
-
-```text
-Master Control Plane
-  -> stores worker state
-  -> receives job requests
-  -> schedules work
-  -> tracks logs and status
-  -> exposes dashboard/API views
-
-Worker Instances
-  -> register with master
-  -> send heartbeats
-  -> pull or receive assigned jobs
-  -> execute work
-  -> report progress and completion
-```
-
-This design keeps global decisions in the control plane while workers stay focused on execution.
+The project uses a master-client structure where global decisions live in the control plane while workers stay focused on execution:
 
 ```mermaid
 flowchart LR
@@ -74,53 +50,9 @@ flowchart LR
     WorkerC --> Master
 ```
 
----
+### Worker Lifecycle
 
-## Goals
-
-The main goals were:
-
-- Track multiple workers from one system.
-- Register workers with metadata such as provider, capacity, and capabilities.
-- Schedule jobs based on worker availability.
-- Detect unhealthy or offline workers.
-- Keep job state visible through logs and status updates.
-- Build a model that can work across providers rather than being tied to one host.
-
----
-
-## Key Features
-
-- **Central Control Plane**: Tracks workers, jobs, logs, metrics, and execution state.
-- **Worker Registration**: Workers report identity, provider, capacity, status, and capabilities.
-- **Heartbeat Monitoring**: The system can detect when workers stop reporting health.
-- **Job Scheduling**: Assigns work across available nodes while preserving execution visibility.
-- **Realtime Operations**: Designed for live cluster status and job progress updates.
-- **Provider-Flexible Model**: Can conceptually support hosted background services, VPS nodes, Docker containers, and local workers.
-
----
-
-## Architecture
-
-The architecture separates cluster state from execution:
-
-```text
-Dashboard / API client
-  -> control plane API
-  -> scheduler
-  -> worker registry
-  -> job state store
-  -> worker communication layer
-  -> worker execution process
-```
-
-The scheduler needs enough information to make decisions, but workers should remain independently deployable. This makes the system easier to scale and reason about.
-
----
-
-## Worker Lifecycle
-
-A typical worker lifecycle looks like this:
+A typical worker lifecycle gives the system predictable, debuggable states:
 
 ```text
 Worker starts
@@ -134,56 +66,42 @@ Worker starts
   -> reports completion or failure
 ```
 
-This lifecycle is important because it gives the system predictable states. Predictable states are what make distributed systems debuggable.
+### Engineering Decisions
 
----
+The most important decision was making **workers first-class entities**. A worker is not just a URL to call — it has identity, metadata, health, capacity, and execution history. That enables better decisions:
+
+- Avoid assigning jobs to offline workers
+- Prefer workers with matching capabilities
+- Track provider-specific capacity
+- Surface operational state in the dashboard
+- Reason about failures after they happen
+
+## Key Features
+
+- **Central Control Plane** — tracks workers, jobs, logs, metrics, and execution state
+- **Worker Registration** — workers report identity, provider, capacity, status, and capabilities
+- **Heartbeat Monitoring** — the system detects when workers stop reporting health
+- **Job Scheduling** — assigns work across available nodes while preserving execution visibility
+- **Realtime Operations** — designed for live cluster status and job progress updates
+- **Provider-Flexible Model** — supports hosted background services, VPS nodes, Docker containers, and local workers
 
 ## Technical Stack
 
-- **Language**: TypeScript.
-- **Frontend / Dashboard**: Modern React-style interface patterns.
-- **Backend Model**: API-driven control plane for workers, jobs, and dashboard clients.
-- **Realtime Direction**: Event-driven updates for cluster status and job progress.
-- **Core Concepts**: Worker leases, heartbeats, scheduling, logs, and capacity management.
-
----
-
-## Engineering Decisions
-
-The most important decision was making workers first-class entities. A worker is not just a URL to call. It has identity, metadata, health, capacity, and execution history.
-
-That enables better decisions:
-
-- Avoid assigning jobs to offline workers.
-- Prefer workers with matching capabilities.
-- Track provider-specific capacity.
-- Surface operational state in the dashboard.
-- Reason about failures after they happen.
-
----
+- **Language**: TypeScript
+- **Frontend / Dashboard**: Modern React-style interface patterns
+- **Backend Model**: API-driven control plane for workers, jobs, and dashboard clients
+- **Realtime Direction**: Event-driven updates for cluster status and job progress
+- **Core Concepts**: Worker leases, heartbeats, scheduling, logs, and capacity management
 
 ## Challenges
 
-Distributed systems fail in messy ways. Workers can disappear, jobs can hang, network calls can fail, and status can become stale. Even a small orchestration platform needs to think about:
-
-- Heartbeat timeouts.
-- Duplicate assignment prevention.
-- Job retry behavior.
-- Worker capacity limits.
-- Partial failure handling.
-- Log visibility and debugging.
+Distributed systems fail in messy ways. Workers can disappear, jobs can hang, network calls can fail, and status can become stale. Even a small orchestration platform needs to think about heartbeat timeouts, duplicate assignment prevention, job retry behavior, worker capacity limits, partial failure handling, and log visibility for debugging.
 
 Nebula Cluster is valuable because it forces those problems into the design early.
 
----
-
 ## What I Learned
 
-This project strengthened my understanding of control-plane architecture. The hardest part is not only executing a job. The harder part is knowing what the system believes is happening, keeping that state accurate, and giving operators enough visibility to trust it.
-
-It also helped me think about tradeoffs between simplicity and robustness. A lightweight scheduler can be useful without trying to become a full Kubernetes replacement.
-
----
+This project strengthened my understanding of **control-plane architecture**. The hardest part is not only executing a job — it's knowing what the system *believes* is happening, keeping that state accurate, and giving operators enough visibility to trust it. It also helped me think about tradeoffs between simplicity and robustness: a lightweight scheduler can be useful without trying to become a full Kubernetes replacement.
 
 ## What It Shows
 
